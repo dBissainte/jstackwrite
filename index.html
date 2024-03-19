@@ -19,8 +19,9 @@
      "esri/views/MapView",   
      "esri/Graphic",  
      "esri/layers/GraphicsLayer",
-     "esri/layers/FeatureLayer"  
-    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer) {
+     "esri/layers/FeatureLayer",
+     "esri/widgets/Editor"  
+    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor) {
 
      esriConfig.apiKey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt";
       const map = new Map({
@@ -284,6 +285,40 @@
 
       // Adding the feature layers to the map
       map.addMany([Airports, Helicopters]);
+      
+      // Adding the const for the feature layer
+      const American_Airports = new FeatureLayer({
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/American_Airports/FeatureServer",
+        
+      //adding the popup here
+      outfields: ["Airportcode"],
+      });
+
+      // Adding the feature layer to the map
+      map.add(American_Airports);
+
+      //set the point layer's LayerInfo
+      const pointInfo = {
+        layer: American_Airports,
+        title: "American Airports",
+        fieldInfos: [
+          {
+            fieldName: "Airportcode",
+            label: "Airport Code",
+            visible: true
+          }
+        ]
+      };
+
+      // Begin Editor constructor
+      const editor = new Editor({
+        view: view,
+        layerInfos: [pointInfo]
+      });     // End Editor constructor
+
+      // Add the widget to the view
+      view.ui.add(editor, "top-right");
+
     });
     
   </script>
