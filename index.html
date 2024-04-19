@@ -290,19 +290,39 @@
       const American_Airports = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/American_Airports/FeatureServer",
         outfields: ["Airportcode"],
-        renderer: {  // Add this renderer property
-          type: "simple",  // autocasts as new SimpleRenderer()
-          symbol: {  // Define the symbol for all features
-            type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
-            url: "https://github.com/dBissainte/jstackwrite/blob/main/Airport.png?raw=true ",
-            width: "64px",
-            height: "64px"
-          }
-        }
-      });
+          // Add this renderer property to the layer
+          renderer: {  
+            // autocasts as new SimpleRenderer()
+            type: "simple",  
+            // Define the symbol for all features
+            symbol: {  
+              // autocasts as new PictureMarkerSymbol()
+              type: "picture-marker",  
+              url: "https://github.com/dBissainte/jstackwrite/blob/main/Airport.png?raw=true ",
+              width: "64px",
+              height: "64px"
+            }
+          },
+          // Define a TextSymbol for the labels
+          labelingInfo: [{
+            symbol: {
+              type: "text", // autocasts as new TextSymbol()
+              color: "black",
+              haloColor: "white",
+              haloSize: "2px",
+              font: { // autocast as new Font()
+                size: 12,
+                weight: "bold"
+              }
+            },
+            labelExpressionInfo: {
+              expression: "$feature.Airportcode" // Use the Airportcode field as the label
+            }
+          }]
+        });
 
-      // Adding the feature layer to the map
-      map.add(American_Airports);
+        // Adding the feature layer to the map
+        map.add(American_Airports);
 
       //set the point layer's LayerInfo
       const pointInfo = {
