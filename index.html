@@ -289,9 +289,19 @@
       // Adding the const for the feature layer
       const American_Airports = new FeatureLayer({
         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/American_Airports/FeatureServer",
-        
-      //adding the popup here
-      outfields: ["Airportcode"],
+        outfields: ["Airportcode"],
+        renderer: {  // Add this renderer property
+          type: "simple",  // autocasts as new SimpleRenderer()
+          symbol: {  // Define the symbol for all features
+            type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+            size: 10,
+            color: "blue",
+            outline: {  // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "red"
+            }
+          }
+        }
       });
 
       // Adding the feature layer to the map
