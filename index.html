@@ -293,13 +293,10 @@
         renderer: {  // Add this renderer property
           type: "simple",  // autocasts as new SimpleRenderer()
           symbol: {  // Define the symbol for all features
-            type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-            size: 10,
-            color: "blue",
-            outline: {  // autocasts as new SimpleLineSymbol()
-              width: 0.5,
-              color: "red"
-            }
+            type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+            url: "https://github.com/dBissainte/jstackwrite/blob/main/Airport.png?raw=true ",
+            width: "64px",
+            height: "64px"
           }
         }
       });
