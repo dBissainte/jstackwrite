@@ -1,389 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hello, Gator Family!</title>
+  <title>Hello, Travelers!</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="" />
-
-  <!-- calls for the arcgis api's CSS file and JS library. -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.25/"></script>
-
-  <!-- Adding the modules, API key, and map constant needed for a full screen map app-->
-  <script>
-
-     require([  
-     "esri/config",  
-     "esri/Map",  
-     "esri/views/MapView",   
-     "esri/Graphic",  
-     "esri/layers/GraphicsLayer",
-     "esri/layers/FeatureLayer",
-     "esri/widgets/Editor",
-     "esri/widgets/Legend"
-    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor, Legend) {
-
-     esriConfig.apiKey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt";
-      const map = new Map({
-        basemap: "arcgis-topographic" // Basemap layer
-      });
-
-      //view of Gainesville, FL
-      const view = new MapView({
-        map: map,
-        center:[-82.3248, 29.6516], // Longitude, latitude
-          zoom: 13, // Zoom level
-        container: "viewDiv" // Div element
-      });
-
-      // adding the constructor for the graphics layer
-      const graphicsLayer = new GraphicsLayer();  
-      map.add(graphicsLayer);
-
-      //defining the geometry of the point for Gainesville, FL
-      const point = {
-        type: "point",
-        longitude: -82.3248, // Longitude
-        latitude: 29.6516 // Latitude
-      };
-
-      // defining the marker style for the point
-      const simpleMarkerSymbol = {
-        type: "simple-marker",
-        style: "square",
-        color: [226, 119, 40], // Orange
-        outline: {
-          color: [255, 255, 255], // White
-          width: 2
-        }
-      };
-
-      // defining popup properties
-      const popupTemplate = {
-        title: "{Name}",
-        content: "{Description}"
-      };
-      
-      const attributes = {
-        Name: "Gainesville, FL",
-        Description: "University Of Florida, Go Gators!"
-      };
-
-      // creating the graphic for the point
-      const pointGraphic = new Graphic({
-        geometry: point,
-        symbol: simpleMarkerSymbol,
-
-        // adding popup properties
-        attributes: attributes,
-        popupTemplate: popupTemplate
-      });
-
-      // adding the graphic to the graphics layer
-      graphicsLayer.add(pointGraphic);
-
-      // Adding a point for the airport
-      const airportCoords = [-82.2781, 29.6903]; // Airport coordinates
-      const airportPoint = {
-        type: "point",
-        longitude: airportCoords[0], // Longitude
-        latitude: airportCoords[1] // Latitude
-      };
-
-      // Marker style for the airport
-      const airportSymbol = {
-        type: "simple-marker",
-        style: "square",
-        color: [226, 119, 40], // Orange
-        outline: {
-          color: [255, 255, 255], // White
-          width: 3
-        }
-      };
-
-      // Popup template for the airport
-      const airportPopupTemplate = {
-        title: "Airport",
-        content: "Welcome to Gainesville, FL: The home of GEOGATORS!"
-      };
-
-      // Graphic for the airport
-      const airportGraphic = new Graphic({
-        geometry: airportPoint,
-        symbol: airportSymbol,
-        popupTemplate: airportPopupTemplate
-      });
-
-      // Adding the airport graphic to the graphics layer
-      graphicsLayer.add(airportGraphic);
-
-      // Adding a point for Ben Hill Griffin Stadium
-      const stadiumCoords = [-82.3486, 29.6498]; // Stadium coordinates
-      const stadiumPoint = {
-        type: "point",
-        longitude: stadiumCoords[0], // Longitude
-        latitude: stadiumCoords[1] // Latitude
-      };
-
-      // Marker style for the stadium
-      const stadiumSymbol = {
-        type: "simple-marker",
-        style: "square",
-        color: [226, 119, 40], // Orange
-        outline: {
-          color: [255, 255, 255], // White
-          width: 2
-        }
-      };
-
-      // Popup template for the stadium
-      const stadiumPopupTemplate = {
-        title: "Ben Hill Griffin Stadium",
-        content: "This is the SWAMP"
-      };
-
-      // Graphic for the stadium
-      const stadiumGraphic = new Graphic({
-        geometry: stadiumPoint,
-        symbol: stadiumSymbol,
-        popupTemplate: stadiumPopupTemplate
-      });
-
-      // Adding the stadium graphic to the graphics layer
-      graphicsLayer.add(stadiumGraphic);
-
-      // Creating polyline geometry to connect the points
-      const polylineGeometry = {
-        type: "polyline",
-        paths: [[point.longitude, point.latitude], [airportCoords[0], airportCoords[1]], [stadiumCoords[0], stadiumCoords[1]], [point.longitude, point.latitude]]
-      };
-
-      // Defining polyline symbol properties
-      const polylineSymbol = {
-        type: "simple-line",
-        color: [0, 0, 255], // Blue color
-        width: 2
-      };
-
-      // Popup template for the polyline
-      const polylinePopupTemplate = {
-        title: "Route",
-        content: "This is the route from the GEOGATORS to the SWAMP"
-      };
-
-      // Creating graphic for the polyline
-      const polylineGraphic = new Graphic({
-        geometry: polylineGeometry,
-        symbol: polylineSymbol,
-        popupTemplate: polylinePopupTemplate
-      });
-
-      // Adding the polyline graphic to the graphics layer
-      graphicsLayer.add(polylineGraphic);
-
-      // Define the popup template for public school locations
-      const popuppublic_school_Location = {
-        title: "{NAME}",
-        content: [
-          {
-            type: "fields",
-            fieldInfos: [
-              {
-                fieldName: "NAME",
-                label: "Name"
-              },
-              {
-                fieldName: "CITY",
-                label: "City"
-              },
-              {
-                fieldName: "CBSATYPE",
-                label: "CBSA Type"
-              },
-              {
-                fieldName: "SCHOOLYEAR",
-                label: "School Year"
-              }
-            ]
-          }
-        ]
-      };
-
-      // Adding feature layer for Public School Locations in the USA
-      const Public_School_Location = new FeatureLayer({
-        url: "https://services1.arcgis.com/Ua5sjt3LWTPigjyD/arcgis/rest/services/Public_School_Location_201819/FeatureServer",
-        outFields: ["NAME", "CITY", "CBSATYPE", "SCHOOLYEAR"],
-        popupTemplate: popuppublic_school_Location
-      });
-
-      // Adding the feature layer to the map
-      map.add(Public_School_Location);
-
-      // Define the popup template for airports
-      const popupAirports = {
-        title: "Airports",
-        content: "Name: {Fac_Name} <br> City: {CITY} <br> Ownership: {Owner_Type}"
-      };
-
-      // Define the popup template for helicopters
-      const popupHelicopters = {
-        title: "Helicopters",
-        content: "Name: {Fac_Name} <br> City: {CITY} <br> Ownership: {Owner_Type}"
-      };
-
-      // Setting up the icon for airports
-      const airportRenderer = {
-        type: "simple",
-        symbol: {
-          type: "picture-marker",
-          url: "https://raw.githubusercontent.com/dBissainte/JSstackread2/main/outline_local_airport_black_24dp.png",
-          width: "18px",
-          height: "18px"
-        }
-      };
-
-      // Setting up the icon for helicopters
-      const helicopterRenderer = {
-        type: "simple",
-        symbol: {
-          type: "picture-marker",
-          url: "https://raw.githubusercontent.com/dBissainte/JSstackread2/main/Helicopter3.png",
-          width: "18px",
-          height: "18px"
-        }
-      };
-
-      // Define the labels for airports
-      const airportLabels = {
-        // ...
-      };
-
-      // Define the labels for helicopters
-      const helicopterLabels = {
-        // ...
-      };
-
-      // Adding feature layer for airports in the USA
-      const Airports = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_1/FeatureServer",
-        outFields: ["Fac_Name", "CITY", "Owner_Type"],
-        popupTemplate: popupAirports,
-        renderer: airportRenderer,
-        definitionExpression: "Fac_Type = 'AIRPORT'",
-        labelingInfo: [airportLabels]
-      });
-
-      // Adding feature layer for helicopters
-      const Helicopters = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_1/FeatureServer",
-        outFields: ["Fac_Name", "CITY", "Owner_Type"],
-        popupTemplate: popupHelicopters,
-        renderer: helicopterRenderer,
-        definitionExpression: "Fac_Type = 'HELIPORT'",
-        labelingInfo: [helicopterLabels]
-      });
-
-      // Adding the feature layers to the map
-      map.addMany([Airports, Helicopters]);
-      
-      // Adding the const for the feature layer
-      const American_Airports = new FeatureLayer({
-        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/American_Airports/FeatureServer",
-        outfields: ["Airportcode"],
-          // Add this renderer property to the layer
-          renderer: {  
-            // autocasts as new SimpleRenderer()
-            type: "simple",  
-            // Define the symbol for all features
-            symbol: {  
-              // autocasts as new PictureMarkerSymbol()
-              type: "picture-marker",  
-              url: "https://github.com/dBissainte/jstackwrite/blob/main/Airport.png?raw=true ",
-              width: "64px",
-              height: "64px"
-            }
-          },
-          // Define a TextSymbol for the labels
-          labelingInfo: [{
-            symbol: {
-              // autocasts as new TextSymbol() 
-              type: "text", 
-              color: "black",
-              haloColor: "white",
-              haloSize: "2px",
-              font: { // autocast as new Font()
-                size: 12,
-                weight: "bold"
-              }
-            },
-            labelExpressionInfo: {
-              expression: "$feature.Airportcode" // Use the Airportcode field as the label
-            }
-          }]
-        });
-
-        // Adding the feature layer to the map
-        map.add(American_Airports);
-
-      //set the point layer's LayerInfo
-      const pointInfo = {
-        layer: American_Airports,
-        title: "American Airports",
-        fieldInfos: [
-          {
-            fieldName: "Airportcode",
-            label: "Airport Code",
-            visible: true
-          }
-        ]
-      };
-
-      // Begin Editor constructor
-      const editor = new Editor({
-        view: view,
-        layerInfos: [pointInfo]
-      });     // End Editor constructor
-
-      // Add the widget to the view
-      view.ui.add(editor, "top-right");
-
-      // Create a new Legend
-  var legend = new Legend({
-    view: view,  // Pass in the map view
-    layerInfos: [{
-      layer: American_Airports,  // Specify the layer to add to the legend
-      title: "locations added by people"  // Specify a title for the layer
-    }]
-  });
-
-  // Add the Legend to the bottom right of the view
-  view.ui.add(legend, "bottom-right");
-});
-    
-    
-  </script>
-
-  <!-- css to make a full screen map-->
   <style>
-    html, 
-    body, 
-    #viewDiv {
+    html, body, #viewDiv {
       padding: 0;
       margin: 0;
       height: 100%;
       width: 100%;
     } 
   </style>
-
 </head>
 <body>
-
-  <!-- div element to display the map -->
   <div id="viewDiv"></div>
-
+  <script>
+    require([
+      "esri/config",  
+      "esri/Map",  
+      "esri/views/MapView",   
+      "esri/Graphic",  
+      "esri/layers/GraphicsLayer", 
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Editor",
+      "esri/widgets/Legend"
+    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor, Legend) {
+      esriConfig.apiKey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt";
+      const map = new Map({ basemap: "arcgis-topographic" });
+      const view = new MapView({ map: map, center:[-82.3248, 29.6516], zoom: 13, container: "viewDiv" });
+      const graphicsLayer = new GraphicsLayer();  
+      map.add(graphicsLayer);
+      const American_AirportsRenderer = {
+        type: "simple",
+        symbol: {
+          type: "picture-marker",
+          url: "https://github.com/dBissainte/jstackwrite/blob/main/Airport.png?raw=true",
+          width: "64px",
+          height: "64px"
+        }
+      };
+      const American_AirportsLabels = {
+        symbol: {
+          type: "text",
+          color: "black",
+          haloColor: "white",
+          haloSize: "1px",
+          font: {
+            size: "12px",
+            family: "Noto Sans",
+            style: "italic",
+            weight: "normal"
+          }
+        },
+        labelPlacement: "above-center",
+        labelExpressionInfo: {
+          expression: "$feature.Airportcode"
+        }
+      };
+      const American_Airports = new FeatureLayer({
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/American_Airports/FeatureServer",
+        renderer: American_AirportsRenderer,
+        labelingInfo: [American_AirportsLabels],
+        outfields: ["Airportcode"],
+      });
+      view.when(function() {
+        map.add(American_Airports);
+      });
+      const editor = new Editor({
+        view: view,
+        layerInfos: [{ layer: American_Airports }]
+      });
+      view.ui.add(editor, "top-right");
+      let legend = new Legend({
+        view: view,
+        layerInfos: [{
+          layer: American_Airports,
+          title: "I traveled to these airports"
+        }]
+      });
+      view.ui.add(legend, "bottom-left");
+    });
+  </script>
 </body>
 </html>
-```
-
-
